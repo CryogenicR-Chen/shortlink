@@ -8,7 +8,6 @@ import com.nageoffer.shortlink.admin.common.convention.exception.AbstractExcepti
 import com.nageoffer.shortlink.admin.common.convention.result.Result;
 import com.nageoffer.shortlink.admin.common.convention.result.Results;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -30,6 +29,8 @@ public class GlobalExceptionHandler {
     /**
      * 拦截参数验证异常
      */
+    //TODO 看@SneakyThrows
+    //@SneakyThrows
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result validExceptionHandler(HttpServletRequest request, MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();

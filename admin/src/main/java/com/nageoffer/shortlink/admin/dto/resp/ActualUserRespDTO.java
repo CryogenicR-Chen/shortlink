@@ -6,7 +6,7 @@ import com.nageoffer.shortlink.admin.common.serialize.PhoneDesensitizationSerial
 import lombok.Data;
 
 @Data
-public class UserRespDTO {
+public class ActualUserRespDTO {
     /**
      * id
      */
@@ -25,7 +25,6 @@ public class UserRespDTO {
     /**
      * 手机号
      */
-    @JsonSerialize(using = PhoneDesensitizationSerializer.class)
     private String phone;
 
     /**
