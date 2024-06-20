@@ -1,4 +1,4 @@
-# 数据源集合
+# 配置数据源，底层被 ShardingSphere 进行了代理
 dataSources:
   ds_0:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
@@ -6,26 +6,35 @@ dataSources:
     jdbcUrl: jdbc:mysql://127.0.0.1:3306/link?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
-#TODO 看shardingsphere
+
 rules:
-  - !SHARDING
+  # 数据加密存储规则
+  - !ENCRYPT
+    # 需要加密的表集合
     tables:
+      # 用户表
       t_user:
-        actualDataNodes: ds_0.t_user_${0..15}
-        tableStrategy:
-          standard:
-            # 分片键
-            shardingColumn: username
-            shardingAlgorithmName: user_table_hash_mod
-    # 分片算法
-    shardingAlgorithms:
-      # 数据表分片算法
-      user_table_hash_mod:
-        # 根据分片键 Hash 分片
-        type: HASH_MOD
-        # 分片数量
+        # 用户表中哪些字段需要进行加密
+        columns:
+          # 手机号字段，逻辑字段，不一定是在数据库中真实存在
+          phone:
+            # 手机号字段存储的密文字段，这个是数据库中真实存在的字段
+            cipherColumn: phone
+            # 身份证字段加密算法
+            encryptorName: common_encryptor
+          mail:
+            cipherColumn: mail
+            encryptorName: common_encryptor
+        # 是否按照密文字段查询
+        queryWithCipherColumn: true
+    # 加密算法
+    encryptors:
+      # 自定义加密算法名称
+      common_encryptor:
+        # 加密算法类型
+        type: AES
         props:
-          sharding-count: 16
-# 展现逻辑 SQL & 真实 SQL
+          # AES 加密密钥
+          aes-key-value: d6oadClrrb9A3GWo
 props:
   sql-show: true
